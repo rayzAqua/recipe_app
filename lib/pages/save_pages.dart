@@ -79,8 +79,8 @@ class _SavePagesState extends State<SavePages> {
           ),
           const SizedBox(height: 20),
           Expanded(
-            child: videoModelDatas.isNotEmpty
-                ? isVideoButtonPress
+            child: isVideoButtonPress
+                ? videoModelDatas.isNotEmpty
                       ? ListView.separated(
                           scrollDirection: Axis.vertical,
                           itemCount: videoModelDatas.length,
@@ -99,8 +99,8 @@ class _SavePagesState extends State<SavePages> {
                             return const SizedBox(height: 20);
                           },
                         )
-                      : Center(child: Text('No Favorite Recipe'))
-                : Center(child: Text('No Favorite Video')),
+                      : Center(child: Text('Không có video yêu thích!'))
+                : Center(child: Text('Không có công thức yêu thích')),
           ),
         ],
       ),
