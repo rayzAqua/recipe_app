@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pratical_flutter/models/favorite_model.dart';
+import 'package:pratical_flutter/models/video_model.dart';
 
 class ProfilePages extends StatefulWidget {
   const ProfilePages({super.key});
@@ -19,7 +20,12 @@ class _ProfilePagesState extends State<ProfilePages> {
   }
 
   void _loadDatas() {
-    favoriteDatas = FavoriteModel.getFavoriteDatas();
+    setState(() {
+      final videoDatas = VideoModel.getAllFavoriteVideos();
+      for (var videoData in videoDatas) {
+        favoriteDatas.add(FavoriteModel(imagePath: videoData.videoPath));
+      }
+    });
   }
 
   void _onFollowPress() {
@@ -100,18 +106,20 @@ class _ProfilePagesState extends State<ProfilePages> {
           ),
           const SizedBox(height: 15),
           Expanded(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 5,
-                crossAxisSpacing: 5,
-              ),
-              itemCount: favoriteDatas.length,
-              itemBuilder: (context, index) {
-                final favoriteData = favoriteDatas[index];
-                return _buildFavoriteView(favoriteData: favoriteData);
-              },
-            ),
+            child: favoriteDatas.isNotEmpty
+                ? (GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 5,
+                      crossAxisSpacing: 5,
+                    ),
+                    itemCount: favoriteDatas.length,
+                    itemBuilder: (context, index) {
+                      final favoriteData = favoriteDatas[index];
+                      return _buildFavoriteView(favoriteData: favoriteData);
+                    },
+                  ))
+                : SizedBox.shrink(),
           ),
         ],
       ),
@@ -161,12 +169,10 @@ class _ProfilePagesState extends State<ProfilePages> {
 
   Widget _buildFavoriteView({required FavoriteModel favoriteData}) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        image: DecorationImage(
-          image: AssetImage(favoriteData.imagePath),
-          fit: BoxFit.cover,
-        ),
+        child: Image.network(favoriteData.imagePath, fit: BoxFit.fill),
       ),
     );
   }
